@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aviator predictor Betika</title>
+<style>
+:root {
+  --neon: #22c55e;
+  --blue: #38bdf8;
+  --red: #ef4444;
+  --yellow: #facc15;
+  --purple: #a855f7;
+  --orange: #f97316;
+  --betika-green: #00b894;
+  --betika-dark: #0f172a;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  color: #e2e8f0;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Glow Effects */
+@keyframes glow {
+  0%, 100% { 
+    box-shadow: 0 0 20px rgba(56, 189, 248, 0.5),
+                0 0 40px rgba(56, 189, 248, 0.3),
+                0 0 60px rgba(56, 189, 248, 0.1);
+  }
+  50% { 
+    box-shadow: 0 0 30px rgba(56, 189, 248, 0.7),
+                0 0 60px rgba(56, 189, 248, 0.5),
+                0 0 90px rgba(56, 189, 248, 0.2);
+  }
+}
+
+@keyframes textGlow {
+  0%, 100% { 
+    text-shadow: 0 0 10px var(--neon),
+                 0 0 20px var(--neon);
+  }
+  50% { 
+    text-shadow: 0 0 20px var(--neon),
+                 0 0 40px var(--neon),
+                 0 0 60px var(--neon);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+/* Login Page */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.login-card {
+  background: rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 40px;
+  width: 100%;
+  max-width: 400px;
+  border: 1px solid rgba(56, 189, 248, 0.2);
+  animation: glow 3s infinite alternate;
+}
+
+.logo-container {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.aviator-logo {
+  font-size: 48px;
+  font-weight: 900;
+  background: linear-gradient(45deg, var(--neon), var(--blue));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: textGlow 2s infinite alternate;
+  letter-spacing: 3px;
+  margin-bottom: 10px;
+}
+
+.betika-logo {
+  color: var(--betika-green);
+  font-size: 24px;
+  font-weight: bold;
+  letter-spacing: 2px;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  color: #94a3b8;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.form-group input {
+  padding: 14px;
+  border-radius: 10px;
+  border: 2px solid rgba(56, 189, 248, 0.1);
+  background: rgba(30, 41, 59, 0.8);
+  color: white;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--blue);
+  box-shadow: 0 0 20px rgba(56, 189, 248, 0.3);
+}
+
+.login-btn {
+  background: linear-gradient(45deg, var(--betika-green), #00a884);
+  color: white;
+  border: none;
+  padding: 16px;
+  border-radius: 10px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 10px;
+}
+
+.login-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(0, 184, 148, 0.4);
+}
+
+.remember-forgot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+}
+
+.remember {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.forgot-password {
+  color: var(--blue);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.forgot-password:hover {
+  color: var(--neon);
+}
+
+/* Game Page */
+.game-container {
+  display: none;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background: rgba(15, 23, 42, 0.8);
+  border-radius: 15px;
+  margin-bottom: 20px;
+  border: 1px solid rgba(56, 189, 248, 0.1);
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(45deg, var(--blue), var(--purple));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.balance {
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--neon);
+  animation: textGlow 2s infinite alternate;
+}
+
+.game-main {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+}
+
+.game-card {
+  background: rgba(15, 23, 42, 0.95);
+  border-radius: 20px;
+  padding: 30px;
+  border: 1px solid rgba(56, 189, 248, 0.2);
+  animation: glow 4s infinite alternate;
+}
+
+.multiplier-display {
+  text-align: center;
+  margin: 30px 0;
+  position: relative;
+  height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.multiplier {
+  font-size: 72px;
+  font-weight: 900;
+  color: var(--neon);
+  text-shadow: 0 0 30px var(--neon);
+  animation: textGlow 1.5s infinite alternate;
+  transition: all 0.5s ease;
+}
+
+.multiplier.flying {
+  color: var(--yellow);
+  animation: pulse 0.5s infinite;
+}
+
+.multiplier.crashed {
+  color: var(--red);
+  animation: crashEffect 0.5s ease;
+}
+
+@keyframes crashEffect {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+.countdown {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: rgba(239, 68, 68, 0.2);
+  color: var(--red);
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: bold;
+  animation: pulse 1s infinite;
+}
+
+.bars-container {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  height: 120px;
+  align-items: flex-end;
+  margin: 30px 0;
+}
+
+.bar {
+  width: 30px;
+  background: linear-gradient(180deg, var(--blue), var(--neon));
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 0 20px var(--neon);
+  transition: height 0.3s ease;
+}
+
+/* Betting Panel */
+.bet-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.bet-amount {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.bet-btn {
+  padding: 15px;
+  background: rgba(30, 41, 59, 0.8);
+  border: 2px solid rgba(56, 189, 248, 0.1);
+  border-radius: 10px;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.bet-btn:hover {
+  background: rgba(56, 189, 248, 0.2);
+  border-color: var(--blue);
+}
+
+.bet-btn.active {
+  background: var(--blue);
+  border-color: var(--blue);
+}
+
+.place-bet-btn {
+  background: linear-gradient(45deg, var(--neon), #16a34a);
+  color: white;
+  border: none;
+  padding: 20px;
+  border-radius: 10px;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.place-bet-btn:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(34, 197, 94, 0.4);
+}
+
+.place-bet-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.cashout-btn {
+  background: linear-gradient(45deg, var(--yellow), #eab308);
+  color: white;
+  border: none;
+  padding: 20px;
+  border-radius: 10px;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: none;
+}
+
+.cashout-btn:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(250, 204, 21, 0.4);
+}
+
+/* Recent Games */
+.recent-games {
+  grid-column: 1 / -1;
+}
+
+.games-list {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 20px 0;
+}
+
+.game-result {
+  min-width: 80px;
+  padding: 15px;
+  border-radius: 10px;
+  text-align: center;
+  font-weight: bold;
+  background: rgba(30, 41, 59, 0.8);
+  animation: pulse 2s infinite;
+}
+
+.game-result.win {
+  background: linear-gradient(45deg, rgba(34, 197, 94, 0.2), rgba(34, 197, 94, 0.4));
+  color: var(--neon);
+}
+
+.game-result.loss {
+  background: linear-gradient(45deg, rgba(239, 68, 68, 0.2), rgba(239, 68, 68, 0.4));
+  color: var(--red);
+}
+
+/* Stats */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  margin: 20px 0;
+}
+
+.stat-item {
+  background: rgba(30, 41, 59, 0.8);
+  padding: 15px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.stat-label {
+  color: #94a3b8;
+  font-size: 12px;
+  margin-bottom: 5px;
+}
+
+.stat-value {
+  font-size: 20px;
+  font-weight: bold;
+  color: var(--neon);
+}
+
+.logout-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: rgba(239, 68, 68, 0.2);
+  color: var(--red);
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.logout-btn:hover {
+  background: rgba(239, 68, 68, 0.4);
+}
+
+/* Notification */
+.notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: linear-gradient(45deg, var(--neon), #16a34a);
+  color: white;
+  padding: 15px 25px;
+  border-radius: 10px;
+  animation: slideIn 0.5s ease, fadeOut 0.5s ease 2.5s;
+  display: none;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .game-main {
+    grid-template-columns: 1fr;
+  }
+  
+  .bet-amount {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .multiplier {
+    font-size: 48px;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- Login Page -->
+<div class="login-container" id="loginPage">
+  <div class="login-card">
+    <div class="logo-container">
+      <div class="aviator-logo">AVIATOR</div>
+      <div class="betika-logo">by BETIKA</div>
+    </div>
+    
+    <form class="login-form" id="loginForm">
+      <div class="form-group">
+        <label for="username">Username / Email</label>
+        <input type="text" id="username" placeholder="Enter your username or email" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="Enter your password" required>
+      </div>
+      
+      <div class="remember-forgot">
+        <label class="remember">
+          <input type="checkbox" id="rememberMe">
+          <span>Remember me</span>
+        </label>
+        <a href="#" class="forgot-password">Forgot Password?</a>
+      </div>
+      
+      <button type="submit" class="login-btn">LOGIN TO PLAY</button>
+    </form>
+  </div>
+</div>
+
+<!-- Game Page -->
+<div class="game-container" id="gamePage">
+  <div class="game-header">
+    <div class="user-info">
+      <div class="user-avatar" id="userAvatar">JS</div>
+      <div>
+        <div id="usernameDisplay">John Smith</div>
+        <div class="balance" id="userBalance">$1,000.00</div>
+      </div>
+    </div>
+    
+    <div class="countdown" id="countdown">5s</div>
+  </div>
+  
+  <div class="game-main">
+    <div class="game-card">
+      <h2 style="text-align: center; margin-bottom: 20px; color: var(--blue);">
+        AVIATOR GAME - PLACE YOUR BET
+      </h2>
+      
+      <div class="multiplier-display">
+        <div class="multiplier" id="multiplier">1.00x</div>
+      </div>
+      
+      <div class="bars-container" id="barsContainer"></div>
+      
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-label">LAST MULTIPLIER</div>
+          <div class="stat-value" id="lastMultiplier">1.00x</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">HIGHEST TODAY</div>
+          <div class="stat-value" id="highestMultiplier">98.76x</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">PLAYERS ONLINE</div>
+          <div class="stat-value" id="playersOnline">1,247</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="game-card">
+      <div class="bet-panel">
+        <h3 style="margin-bottom: 20px; color: var(--blue);">BET AMOUNT</h3>
+        
+        <div class="bet-amount">
+          <button class="bet-btn" data-amount="10">$10</button>
+          <button class="bet-btn" data-amount="25">$25</button>
+          <button class="bet-btn" data-amount="50">$50</button>
+          <button class="bet-btn" data-amount="100">$100</button>
+          <button class="bet-btn" data-amount="250">$250</button>
+          <button class="bet-btn" data-amount="500">$500</button>
+          <button class="bet-btn" data-amount="1000">$1000</button>
+          <button class="bet-btn" data-amount="5000">$5000</button>
+        </div>
+        
+        <div style="display: flex; gap: 10px; margin-top: 10px;">
+          <input type="number" id="customBet" placeholder="Custom amount" 
+                 style="flex: 1; padding: 15px; border-radius: 10px; border: 2px solid rgba(56, 189, 248, 0.1); background: rgba(30, 41, 59, 0.8); color: white;">
+          <button onclick="setCustomBet()" 
+                  style="padding: 15px; background: var(--blue); color: white; border: none; border-radius: 10px; cursor: pointer;">
+            SET
+          </button>
+        </div>
+        
+        <button class="place-bet-btn" id="placeBetBtn" onclick="placeBet()">
+          PLACE BET
+        </button>
+        
+        <button class="cashout-btn" id="cashoutBtn" onclick="cashOut()">
+          CASHOUT <span id="cashoutMultiplier">1.00x</span>
+        </button>
+        
+        <div style="margin-top: 20px; text-align: center;">
+          <div style="color: #94a3b8; font-size: 14px;">POTENTIAL WIN</div>
+          <div style="font-size: 24px; font-weight: bold; color: var(--neon;" id="potentialWin">$0.00</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="game-card recent-games">
+      <h3 style="margin-bottom: 20px; color: var(--blue);">RECENT MULTIPLIERS</h3>
+      <div class="games-list" id="recentGames"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Notification -->
+<div class="notification" id="notification"></div>
+
+<!-- Logout Button -->
+<button class="logout-btn" onclick="logout()" style="display: none;" id="logoutBtn">
+  LOGOUT
+</button>
+
+<script>
+// Game State
+let gameState = {
+  isLoggedIn: false,
+  balance: 1000.00,
+  currentBet: 0,
+  multiplier: 1.00,
+  isFlying: false,
+  hasBet: false,
+  autoChangeInterval: null,
+  crashMultiplier: 1.00,
+  recentGames: [],
+  countdown: 5,
+  betAmounts: [10, 25, 50, 100, 250, 500, 1000, 5000]
+};
+
+// DOM Elements
+const loginPage = document.getElementById('loginPage');
+const gamePage = document.getElementById('gamePage');
+const loginForm = document.getElementById('loginForm');
+const usernameDisplay = document.getElementById('usernameDisplay');
+const userBalance = document.getElementById('userBalance');
+const multiplierEl = document.getElementById('multiplier');
+const barsContainer = document.getElementById('barsContainer');
+const countdownEl = document.getElementById('countdown');
+const placeBetBtn = document.getElementById('placeBetBtn');
+const cashoutBtn = document.getElementById('cashoutBtn');
+const cashoutMultiplier = document.getElementById('cashoutMultiplier');
+const potentialWin = document.getElementById('potentialWin');
+const recentGames = document.getElementById('recentGames');
+const notification = document.getElementById('notification');
+const logoutBtn = document.getElementById('logoutBtn');
+const playersOnline = document.getElementById('playersOnline');
+const lastMultiplier = document.getElementById('lastMultiplier');
+const highestMultiplier = document.getElementById('highestMultiplier');
+
+// Improved Algorithm for Realistic Multiplier Generation
+function generateMultiplier() {
+  const r = Math.random();
+  
+  // More realistic distribution based on actual crash game patterns
+  if (r < 0.55) return (Math.random() * 1.5 + 1).toFixed(2); // 55% under 2.5x
+  if (r < 0.80) return (Math.random() * 3 + 1.5).toFixed(2); // 25% between 1.5x-4.5x
+  if (r < 0.95) return (Math.random() * 10 + 4).toFixed(2);  // 15% between 4x-14x
+  if (r < 0.99) return (Math.random() * 50 + 10).toFixed(2); // 4% between 10x-60x
+  return (Math.random() * 40 + 60).toFixed(2); // 1% between 60x-100x
+}
+
+// Initialize game
+function initGame() {
+  generateBars();
+  updatePlayersOnline();
+  startAutoChange();
+  loadRecentGames();
+}
+
+// Generate animated bars
+function generateBars() {
+  barsContainer.innerHTML = '';
+  for (let i = 0; i < 15; i++) {
+    const bar = document.createElement('div');
+    bar.className = 'bar';
+    const height = Math.random() * 80 + 40;
+    bar.style.height = `${height}px`;
+    bar.style.animation = `pulse ${Math.random() * 0.5 + 0.8}s infinite alternate`;
+    bar.style.animationDelay = `${Math.random() * 0.5}s`;
+    barsContainer.appendChild(bar);
+  }
+}
+
+// Update online players
+function updatePlayersOnline() {
+  const base = 1200;
+  const random = Math.floor(Math.random() * 300);
+  const online = base + random;
+  playersOnline.textContent = online.toLocaleString();
+  
+  // Update every 10 seconds
+  setTimeout(updatePlayersOnline, 10000);
+}
+
+// Start auto-change every 5 seconds
+function startAutoChange() {
+  gameState.autoChangeInterval = setInterval(() => {
+    if (!gameState.isFlying && !gameState.hasBet) {
+      startNewRound();
+    }
+  }, 5000);
+  
+  // Start first round immediately
+  setTimeout(startNewRound, 1000);
+}
+
+// Start new round
+function startNewRound() {
+  gameState.isFlying = true;
+  gameState.multiplier = 1.00;
+  gameState.crashMultiplier = parseFloat(generateMultiplier());
+  
+  multiplierEl.textContent = '1.00x';
+  multiplierEl.className = 'multiplier flying';
+  countdownEl.textContent = 'FLYING';
+  countdownEl.style.background = 'rgba(250, 204, 21, 0.2)';
+  countdownEl.style.color = 'var(--yellow)';
+  
+  // Animate multiplier
+  const startTime = Date.now();
+  const duration = Math.min(gameState.crashMultiplier * 200, 8000); // Max 8 seconds
+  
+  function updateMultiplier() {
+    if (!gameState.isFlying) return;
+    
+    const elapsed = Date.now() - startTime;
+    const progress = elapsed / duration;
+    
+    // Exponential growth for realistic feel
+    const currentMultiplier = 1 + (gameState.crashMultiplier - 1) * Math.pow(progress, 1.5);
+    
+    if (progress < 1) {
+      gameState.multiplier = currentMultiplier;
+      multiplierEl.textContent = currentMultiplier.toFixed(2) + 'x';
+      
+      // Update potential win if bet placed
+      if (gameState.hasBet) {
+        updatePotentialWin();
+      }
+      
+      requestAnimationFrame(updateMultiplier);
+    } else {
+      // Crash
+      gameState.multiplier = gameState.crashMultiplier;
+      multiplierEl.textContent = gameState.crashMultiplier.toFixed(2) + 'x';
+      multiplierEl.className = 'multiplier crashed';
+      
+      // Handle crash
+      setTimeout(() => {
+        handleCrash();
+      }, 1000);
+    }
+  }
+  
+  updateMultiplier();
+}
+
+// Handle crash
+function handleCrash() {
+  gameState.isFlying = false;
+  
+  // Add to recent games
+  gameState.recentGames.unshift({
+    multiplier: gameState.crashMultiplier,
+    time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+  });
+  
+  if (gameState.recentGames.length > 10) {
+    gameState.recentGames.pop();
+  }
+  
+  // Update last multiplier
+  lastMultiplier.textContent = gameState.crashMultiplier.toFixed(2) + 'x';
+  
+  // Update highest multiplier
+  if (gameState.crashMultiplier > parseFloat(highestMultiplier.textContent)) {
+    highestMultiplier.textContent = gameState.crashMultiplier.toFixed(2) + 'x';
+  }
+  
+  // Reset UI
+  multiplierEl.className = 'multiplier';
+  countdownEl.textContent = '5s';
+  countdownEl.style.background = 'rgba(239, 68, 68, 0.2)';
+  countdownEl.style.color = 'var(--red)';
+  
+  // Update recent games display
+  loadRecentGames();
+  
+  // Generate new bars
+  generateBars();
+  
+  // Reset countdown
+  gameState.countdown = 5;
+  startCountdown();
+  
+  // Reset bet if lost
+  if (gameState.hasBet && !gameState.cashedOut) {
+    showNotification('Your bet crashed at ' + gameState.crashMultiplier.toFixed(2) + 'x', 'error');
+    resetBet();
+  }
+}
+
+// Start countdown
+function startCountdown() {
+  clearInterval(gameState.countdownInterval);
+  gameState.countdown = 5;
+  
+  gameState.countdownInterval = setInterval(() => {
+    gameState.countdown--;
+    countdownEl.textContent = gameState.countdown + 's';
+    
+    if (gameState.countdown <= 0) {
+      clearInterval(gameState.countdownInterval);
+      if (!gameState.isFlying && !gameState.hasBet) {
+        startNewRound();
+      }
+    }
+  }, 1000);
+}
+
+// Place bet
+function placeBet() {
+  if (gameState.isFlying || gameState.hasBet) return;
+  
+  if (gameState.currentBet <= 0) {
+    showNotification('Please select a bet amount', 'warning');
+    return;
+  }
+  
+  if (gameState.currentBet > gameState.balance) {
+    showNotification('Insufficient balance', 'error');
+    return;
+  }
+  
+  gameState.hasBet = true;
+  gameState.cashedOut = false;
+  gameState.balance -= gameState.currentBet;
+  
+  placeBetBtn.disabled = true;
+  cashoutBtn.style.display = 'block';
+  
+  updateBalance();
+  updatePotentialWin();
+  showNotification('Bet placed: $' + gameState.currentBet, 'success');
+}
+
+// Cash out
+function cashOut() {
+  if (!gameState.hasBet || !gameState.isFlying) return;
+  
+  const winAmount = gameState.currentBet * gameState.multiplier;
+  gameState.balance += winAmount;
+  gameState.hasBet = false;
+  gameState.cashedOut = true;
+  
+  placeBetBtn.disabled = false;
+  cashoutBtn.style.display = 'none';
+  
+  updateBalance();
+  showNotification('Cashed out at ' + gameState.multiplier.toFixed(2) + 'x! Won: $' + winAmount.toFixed(2), 'success');
+}
+
+// Update potential win
+function updatePotentialWin() {
+  if (gameState.hasBet) {
+    const win = gameState.currentBet * gameState.multiplier;
+    potentialWin.textContent = '$' + win.toFixed(2);
+    cashoutMultiplier.textContent = gameState.multiplier.toFixed(2) + 'x';
+  } else {
+    potentialWin.textContent = '$0.00';
+  }
+}
+
+// Reset bet
+function resetBet() {
+  gameState.hasBet = false;
+  gameState.currentBet = 0;
+  placeBetBtn.disabled = false;
+  cashoutBtn.style.display = 'none';
+  potentialWin.textContent = '$0.00';
+  
+  // Reset bet buttons
+  document.querySelectorAll('.bet-btn').forEach(btn => {
+    btn.classList.remove('active');
+  });
+}
+
+// Update balance display
+function updateBalance() {
+  userBalance.textContent = '$' + gameState.balance.toFixed(2);
+}
+
+// Show notification
+function showNotification(message, type = 'info') {
+  notification.textContent = message;
+  notification.style.display = 'block';
+  
+  if (type === 'success') {
+    notification.style.background = 'linear-gradient(45deg, var(--neon), #16a34a)';
+  } else if (type === 'error') {
+    notification.style.background = 'linear-gradient(45deg, var(--red), #dc2626)';
+  } else if (type === 'warning') {
+    notification.style.background = 'linear-gradient(45deg, var(--yellow), #eab308)';
+  }
+  
+  setTimeout(() => {
+    notification.style.display = 'none';
+  }, 3000);
+}
+
+// Load recent games
+function loadRecentGames() {
+  recentGames.innerHTML = '';
+  gameState.recentGames.forEach(game => {
+    const div = document.createElement('div');
+    div.className = `game-result ${game.multiplier >= 2 ? 'win' : 'loss'}`;
+    div.textContent = game.multiplier.toFixed(2) + 'x';
+    div.title = game.time;
+    recentGames.appendChild(div);
+  });
+}
+
+// Set custom bet
+function setCustomBet() {
+  const customInput = document.getElementById('customBet');
+  const amount = parseFloat(customInput.value);
+  
+  if (amount && amount > 0) {
+    gameState.currentBet = amount;
+    showNotification('Custom bet set: $' + amount, 'success');
+    
+    // Update UI
+    document.querySelectorAll('.bet-btn').forEach(btn => {
+      btn.classList.remove('active');
+    });
+    
+    customInput.value = '';
+  }
+}
+
+// Login handler
+loginForm.addEventListener('submit', function(e) {
+  e.preventDefault();
+  
+  const username = document.getElementById('username').value;
+  const password = document.getElementById('password').value;
+  
+  // Simple validation
+  if (username && password) {
+    gameState.isLoggedIn = true;
+    usernameDisplay.textContent = username;
+    userBalance.textContent = '$' + gameState.balance.toFixed(2);
+    
+    // Show game page
+    loginPage.style.display = 'none';
+    gamePage.style.display = 'block';
+    logoutBtn.style.display = 'block';
+    
+    // Initialize game
+    initGame();
+    showNotification('Welcome to Aviator by Betika!', 'success');
+  }
+});
+
+// Bet amount buttons
+document.querySelectorAll('.bet-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    const amount = parseFloat(this.dataset.amount);
+    gameState.currentBet = amount;
+    
+    // Update UI
+    document.querySelectorAll('.bet-btn').forEach(b => {
+      b.classList.remove('active');
+    });
+    this.classList.add('active');
+    
+    showNotification('Bet amount set: $' + amount, 'success');
+  });
+});
+
+// Logout
+function logout() {
+  gameState.isLoggedIn = false;
+  gamePage.style.display = 'none';
+  loginPage.style.display = 'flex';
+  logoutBtn.style.display = 'none';
+  resetBet();
+  
+  // Clear intervals
+  clearInterval(gameState.autoChangeInterval);
+  clearInterval(gameState.countdownInterval);
+}
+
+// Initialize on load
+document.addEventListener('DOMContentLoaded', function() {
+  // Start countdown
+  startCountdown();
+  
+  // Generate initial bars
+  generateBars();
+});
+</script>
+</body>
+</html>
